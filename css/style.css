@@ -6,7 +6,13 @@
             --accent: #991b1b;
         }
 
-        
+        /* Adicione isso ao seu arquivo CSS para garantir a responsividade */
+@media (max-width: 600px) {
+    .meta-info-grid { grid-template-columns: 1fr; }
+    .table-container { overflow-x: auto; }
+    /* Ajuste para botões ficarem melhores no celular */
+    .btn-finalize { padding: 15px; font-size: 16px; }
+}
 
         * {
             box-sizing: border-box;
