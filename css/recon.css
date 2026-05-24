@@ -446,3 +446,30 @@
             background-color: var(--primary-light);
             border-color: var(--primary);
         }
+
+        footer {
+    /* Mesmo fundo branco usado no .container */
+    background: #ffffff;
+    
+    /* Mesma borda usada nos outros elementos */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    
+    /* Mesma sombra do .container */
+    box-shadow: 0 4px 6px -1px rgba(125, 5, 5, 0.08);
+    
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    text-align: center;
+    
+    /* Cor de texto padrão do seu site */
+    color: var(--text-dark);
+}
+
+/* Opcional: Para garantir que links dentro do footer fiquem alinhados */
+footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
