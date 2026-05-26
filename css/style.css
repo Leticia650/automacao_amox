@@ -1,100 +1,165 @@
 :root {
-            --primary: #7d0505;
-            --primary-light: #fdf2f2;
-            --border-color: #f1cbd2;
-            --text-dark: #1e293b;
-            --accent: #991b1b;
-        }
-
-        /* Adicione isso ao seu arquivo CSS para garantir a responsividade */
-@media (max-width: 600px) {
-    .meta-info-grid { grid-template-columns: 1fr; }
-    .table-container { overflow-x: auto; }
-    /* Ajuste para botões ficarem melhores no celular */
-    .btn-finalize { padding: 15px; font-size: 16px; }
+    --primary: #7d0505;
+    --primary-light: #fdf2f2;
+    --border-color: #f1cbd2;
+    --text-dark: #1e293b;
+    --accent: #991b1b;
 }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        }
+/* Responsividade */
+@media (max-width: 600px) {
 
-        body {
-            background-color: #fffafb;
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .meta-info-grid {
+        grid-template-columns: 1fr;
+    }
 
-        .menu-container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(125, 5, 5, 0.1);
-            border: 1px solid var(--border-color);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
+    .table-container {
+        overflow-x: auto;
+    }
 
-        h1 {
-            font-size: 26px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
+    .btn-finalize {
+        padding: 15px;
+        font-size: 16px;
+    }
 
-        p {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
+    .menu-container {
+        padding: 25px;
+    }
 
-        .button-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .menu-btn {
+        font-size: 16px;
+        padding: 14px;
+    }
+}
 
-        .menu-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
 
-        .btn-reconciliacao {
-            background-color: var(--primary);
-        }
+/* BODY */
+body {
+    background-color: #fffafb;
+    color: var(--text-dark);
 
-        .btn-reconciliacao:hover {
-            background-color: var(--accent);
-            transform: translateY(-2px);
-        }
+    min-height: 100vh;
 
-        .btn-transferencias {
-            background-color: var(--primary) /* Um tom neutro escuro para diferenciar visualmente */
-        }
+    display: flex;
+    flex-direction: column;
 
-        .btn-transferencias:hover {
-            background-color: var(--accent);
-            transform: translateY(-2px);
-        }
+    align-items: center;
 
-        .icon {
-            font-size: 22px;
-        }
+    padding: 20px;
+}
+
+/* CONTAINER */
+.menu-container {
+    background: #ffffff;
+
+    padding: 40px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 15px -3px rgba(125, 5, 5, 0.1);
+
+    border: 1px solid var(--border-color);
+
+    text-align: center;
+
+    max-width: 500px;
+    width: 100%;
+
+    margin-top: auto;
+}
+
+/* TÍTULO */
+h1 {
+    font-size: 26px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+/* TEXTO */
+p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* GRID BOTÕES */
+.button-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* BOTÕES */
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 16px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* BOTÃO RECONCILIAÇÃO */
+.btn-reconciliacao {
+    background-color: var(--primary);
+}
+
+.btn-reconciliacao:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* BOTÃO TRANSFERÊNCIAS */
+.btn-transferencias {
+    background-color: var(--primary);
+}
+
+.btn-transferencias:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* ÍCONE */
+.icon {
+    font-size: 22px;
+}
+
+/* FOOTER */
+footer {
+    font-size: small;
+    width: 100%;
+    background-color: #fffafb;
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    color: var(--text-dark);
+}
+
+/* LINK FOOTER */
+footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}

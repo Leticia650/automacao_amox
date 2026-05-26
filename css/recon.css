@@ -434,18 +434,18 @@ input[type="text"]:focus {
 }
 
 /* Footer */
+/* FOOTER */
 footer {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(125, 5, 5, 0.08);
-    margin-top: 20px;
-    margin-bottom: 20px;
+    font-size: small;
+    width: 100%;
+    background-color: #fffafb;
+    margin-top: auto;
     padding: 20px;
     text-align: center;
     color: var(--text-dark);
 }
 
+/* LINK FOOTER */
 footer a {
     color: var(--primary);
     text-decoration: none;
