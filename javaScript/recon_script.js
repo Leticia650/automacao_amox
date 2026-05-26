@@ -1,4 +1,6 @@
 
+
+
   const materiais = [
         { id: 'frascos', label: 'Frascos', tol: 5.00 }, { id: 'tampas', label: 'Tampas', tol: 5.00 },
         { id: 'seringa', label: 'Seringa', tol: 2.00 }, { id: 'copo', label: 'Copo', tol: 2.00 },
@@ -58,7 +60,45 @@
                     input.type = 'number';
                     input.id = `${mat.id}_${attr.id}`;
                     input.placeholder = 'Digite...';
-                    input.oninput = calculateValues;
+                   input.oninput = calculateValues;
+
+if(attr.id === 'total_utilizado'){
+
+    // POPUP ORIGINAL -> FRASCOS E TAMPAS
+    if(mat.id === 'frascos' || mat.id === 'tampas'){
+
+        input.readOnly = true;
+        input.style.cursor = 'pointer';
+
+        input.onclick = () => abrirPopup(input.id);
+    }
+
+    // POPUP RÓTULO
+    else if(mat.id === 'rotulo'){
+
+        input.readOnly = true;
+        input.style.cursor = 'pointer';
+
+        input.onclick = () => abrirPopupRotulo(input.id);
+    }
+
+    // POPUP CARTUCHO E BULA
+    else if(mat.id === 'cartucho'){
+
+    input.readOnly = true;
+    input.style.cursor = 'pointer';
+
+    input.onclick = () => abrirPopupCartucho(input.id);
+}
+
+else if(mat.id === 'bula'){
+
+    input.readOnly = true;
+    input.style.cursor = 'pointer';
+
+    input.onclick = () => abrirPopupBula(input.id);
+}
+}
                     td.appendChild(input);
                 } else if (attr.type === 'text') {
                     const input = document.createElement('input');
@@ -416,7 +456,256 @@
         }
     }
 
+    let campoAtualPopup = null;
+
+function abrirPopup(inputId){
+    campoAtualPopup = inputId;
+
+    document.getElementById('popup-utilizacao').style.display = 'flex';
+
+    document.querySelectorAll('#popup-utilizacao input[type="number"]').forEach(i=>{
+        i.value = 0;
+    });
+
+    document.getElementById('enable_vazamento').checked = false;
+    document.getElementById('popup_vazamento').disabled = true;
+
+    calcularPopup();
+}
+
+function fecharPopup(){
+    document.getElementById('popup-utilizacao').style.display = 'none';
+}
+
+function calcularPopup(){
+
+    const fitas = (parseFloat(document.getElementById('popup_fitas').value) || 0) * 8;
+
+    const testesPelatina = (parseFloat(document.getElementById('popup_pelatina').value) || 0) * 3;
+
+    let vazamento = 0;
+
+    if(document.getElementById('enable_vazamento').checked){
+        vazamento = (parseFloat(document.getElementById('popup_vazamento').value) || 0) * 3;
+    }
+
+    const embalada = parseFloat(document.getElementById('popup_embalada').value) || 0;
+
+    const vertopac = parseFloat(document.getElementById('popup_vertopac').value) || 0;
+
+    const amostraPelatina = parseFloat(document.getElementById('popup_amostra_pelatina').value) || 0;
+
+    const total =
+        fitas +
+        testesPelatina +
+        vazamento +
+        embalada +
+        vertopac +
+        amostraPelatina;
+
+    document.getElementById('popup_total').textContent = total;
+}
+
+function salvarPopup(){
+
+    if(campoAtualPopup){
+        document.getElementById(campoAtualPopup).value =
+            document.getElementById('popup_total').textContent;
+
+        calculateValues();
+    }
+
+    fecharPopup();
+}
+
+document.getElementById('enable_vazamento').addEventListener('change', function(){
+    document.getElementById('popup_vazamento').disabled = !this.checked;
+
+    calcularPopup();
+});
+
+document.querySelectorAll('#popup-utilizacao input').forEach(el=>{
+    el.addEventListener('input', calcularPopup);
+});
+
     window.onload = function() {
         renderTable();
         calculateValues();
     };
+
+    let campoAtualRotulo = null;
+
+function abrirPopupRotulo(inputId){
+
+    campoAtualRotulo = inputId;
+
+    document.getElementById('popup-rotulo').style.display = 'flex';
+
+    document.querySelectorAll('#popup-rotulo input').forEach(i=>{
+        i.value = 0;
+    });
+
+    calcularPopupRotulo();
+}
+
+function fecharPopupRotulo(){
+    document.getElementById('popup-rotulo').style.display = 'none';
+}
+
+function calcularPopupRotulo(){
+
+    const embalado =
+        parseFloat(document.getElementById('rot_embalado').value) || 0;
+
+    const documento =
+        parseFloat(document.getElementById('rot_documento').value) || 0;
+
+    const pelatina =
+        parseFloat(document.getElementById('rot_pelatina').value) || 0;
+
+    const vertopac =
+        parseFloat(document.getElementById('rot_vertopac').value) || 0;
+
+    const total =
+        embalado +
+        documento +
+        pelatina +
+        vertopac;
+
+    document.getElementById('rot_total').textContent = total;
+}
+
+function salvarPopupRotulo(){
+
+    if(campoAtualRotulo){
+
+        document.getElementById(campoAtualRotulo).value =
+            document.getElementById('rot_total').textContent;
+
+        calculateValues();
+    }
+
+    fecharPopupRotulo();
+}
+
+document.querySelectorAll('#popup-rotulo input').forEach(el=>{
+    el.addEventListener('input', calcularPopupRotulo);
+});
+// =========================
+// POPUP CARTUCHO
+// =========================
+
+let campoAtualCartucho = null;
+
+function abrirPopupCartucho(inputId){
+
+    campoAtualCartucho = inputId;
+
+    document.getElementById('popup-cartucho').style.display = 'flex';
+
+    document.querySelectorAll('#popup-cartucho input').forEach(i=>{
+        i.value = 0;
+    });
+
+    calcularPopupCartucho();
+}
+
+function fecharPopupCartucho(){
+    document.getElementById('popup-cartucho').style.display = 'none';
+}
+
+function calcularPopupCartucho(){
+
+    const embalado =
+        parseFloat(document.getElementById('cart_embalado').value) || 0;
+
+    const documento =
+        parseFloat(document.getElementById('cart_documento').value) || 0;
+
+    const retidas =
+        parseFloat(document.getElementById('cart_retidas').value) || 0;
+
+    const total =
+        embalado +
+        documento +
+        retidas;
+
+    document.getElementById('cart_total').textContent = total;
+}
+
+function salvarPopupCartucho(){
+
+    if(campoAtualCartucho){
+
+        document.getElementById(campoAtualCartucho).value =
+            document.getElementById('cart_total').textContent;
+
+        calculateValues();
+    }
+
+    fecharPopupCartucho();
+}
+
+document.querySelectorAll('#popup-cartucho input').forEach(el=>{
+    el.addEventListener('input', calcularPopupCartucho);
+});
+
+
+// =========================
+// POPUP BULA
+// =========================
+
+let campoAtualBula = null;
+
+function abrirPopupBula(inputId){
+
+    campoAtualBula = inputId;
+
+    document.getElementById('popup-bula').style.display = 'flex';
+
+    document.querySelectorAll('#popup-bula input').forEach(i=>{
+        i.value = 0;
+    });
+
+    calcularPopupBula();
+}
+
+function fecharPopupBula(){
+    document.getElementById('popup-bula').style.display = 'none';
+}
+
+function calcularPopupBula(){
+
+    const embalado =
+        parseFloat(document.getElementById('bula_embalado').value) || 0;
+
+    const documento =
+        parseFloat(document.getElementById('bula_documento').value) || 0;
+
+    const retidas =
+        parseFloat(document.getElementById('bula_retidas').value) || 0;
+
+    const total =
+        embalado +
+        documento +
+        retidas;
+
+    document.getElementById('bula_total').textContent = total;
+}
+
+function salvarPopupBula(){
+
+    if(campoAtualBula){
+
+        document.getElementById(campoAtualBula).value =
+            document.getElementById('bula_total').textContent;
+
+        calculateValues();
+    }
+
+    fecharPopupBula();
+}
+
+document.querySelectorAll('#popup-bula input').forEach(el=>{
+    el.addEventListener('input', calcularPopupBula);
+});

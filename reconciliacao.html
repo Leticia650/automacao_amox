@@ -10,6 +10,7 @@
     
 </head>
 <body>
+<!-- IMPLEMENTANDO OS POUPUS DE CALCULO DE MATERIAL UTILIZADO-->
 
 <div class="container">
     <!-- Envoltório adicionado para permitir o alinhamento das abas à esquerda e do botão à direita -->
@@ -95,6 +96,154 @@
         <div id="history-container"></div>
     </div>
 </div>
+
+<!-- codigo do botao poupup-->
+
+<!-- POPUP -->
+<div id="popup-utilizacao" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Cálculo de Utilização - Frascos</h2>
+
+        <div class="popup-grid">
+
+            <label>Quantidade de fitas (Romaco)</label>
+            <input type="number" id="popup_fitas" value="0">
+
+            <label>Quantidade de testes Pelatina</label>
+            <input type="number" id="popup_pelatina" value="0">
+
+            <label>
+                <input type="checkbox" id="enable_vazamento">
+                Habilitar testes de vazamento
+            </label>
+            <input type="number" id="popup_vazamento" value="0" disabled>
+
+            <label>Quantidade embalada</label>
+            <input type="number" id="popup_embalada" value="0">
+
+            <label>Amostras Vertopac</label>
+            <input type="number" id="popup_vertopac" value="0">
+
+            <label>Amostras Pelatina</label>
+            <input type="number" id="popup_amostra_pelatina" value="0">
+
+        </div>
+
+        <div class="popup-total">
+            Total utilizado: <span id="popup_total">0</span>
+        </div>
+
+        <div class="popup-buttons">
+            <button onclick="fecharPopup()">Cancelar</button>
+            <button onclick="salvarPopup()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP RÓTULO -->
+<div id="popup-rotulo" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Cálculo de Utilização - Rótulo</h2>
+
+        <div class="popup-grid">
+
+            <label>Quantidade embalada</label>
+            <input type="number" id="rot_embalado" value="0">
+
+            <label>Amostras anexadas no documento</label>
+            <input type="number" id="rot_documento" value="0">
+
+            <label>Amostras Pelatina</label>
+            <input type="number" id="rot_pelatina" value="0">
+
+            <label>Amostras Vertopac</label>
+            <input type="number" id="rot_vertopac" value="0">
+
+        </div>
+
+        <div class="popup-total">
+            Total utilizado:
+            <span id="rot_total">0</span>
+        </div>
+
+        <div class="popup-buttons">
+            <button onclick="fecharPopupRotulo()">Cancelar</button>
+            <button onclick="salvarPopupRotulo()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- POPUP CARTUCHO/BULA -->
+<!-- POPUP CARTUCHO -->
+<div id="popup-cartucho" class="popup-overlay">
+    <div class="popup-box">
+
+        <h2>Cálculo de Utilização - Cartucho</h2>
+
+        <div class="popup-grid">
+
+            <label>Quantidade embalada</label>
+            <input type="number" id="cart_embalado" value="0">
+
+            <label>Amostras anexadas ao documento</label>
+            <input type="number" id="cart_documento" value="0">
+
+            <label>Amostras</label>
+            <input type="number" id="cart_retidas" value="0">
+
+        </div>
+
+        <div class="popup-total">
+            Total utilizado:
+            <span id="cart_total">0</span>
+        </div>
+
+        <div class="popup-buttons">
+            <button onclick="fecharPopupCartucho()">Cancelar</button>
+            <button onclick="salvarPopupCartucho()">Salvar</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- POPUP BULA -->
+<div id="popup-bula" class="popup-overlay">
+    <div class="popup-box">
+
+        <h2>Cálculo de Utilização - Bula</h2>
+
+        <div class="popup-grid">
+
+            <label>Quantidade embalada</label>
+            <input type="number" id="bula_embalado" value="0">
+
+            <label>Amostras anexadas ao documento</label>
+            <input type="number" id="bula_documento" value="0">
+
+            <label>Amostras</label>
+            <input type="number" id="bula_retidas" value="0">
+
+        </div>
+
+        <div class="popup-total">
+            Total utilizado:
+            <span id="bula_total">0</span>
+        </div>
+
+        <div class="popup-buttons">
+            <button onclick="fecharPopupBula()">Cancelar</button>
+            <button onclick="salvarPopupBula()">Salvar</button>
+        </div>
+
+    </div>
+</div>
+
+
+
 
 <script src="javaScript/recon_script.js">
   
