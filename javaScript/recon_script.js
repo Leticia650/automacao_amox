@@ -184,253 +184,352 @@ else if(mat.id === 'bula'){
         });
     }
 
-    function finalizeBatch() {
-        const fieldLote = document.getElementById('lote_atual');
-        const fieldOrdem = document.getElementById('ordem_atual');
-        const lote = fieldLote.value.trim();
-        const ordem = fieldOrdem.value.trim();
+  function finalizeBatch() {
 
-        if (!lote) {
-            alert('Erro: O campo "Número do Lote Atual" é obrigatório.');
-            fieldLote.focus();
-            return;
-        }
-        if (!ordem) {
-            alert('Erro: O campo "Número da Ordem Atual" é obrigatório.');
-            fieldOrdem.focus();
-            return;
-        }
+    const fieldLote =
+        document.getElementById('lote_atual');
 
-        const dadosMateriais = {};
-        const transferenciasEnviadas = []; 
-        const transferenciasRecebidas = [];
+    const fieldOrdem =
+        document.getElementById('ordem_atual');
 
-        for (let i = 0; i < materiais.length; i++) {
-            const mat = materiais[i];
-            const isHidden = document.getElementById(`toggle-${mat.id}`) ? !document.getElementById(`toggle-${mat.id}`).checked : false;
-            
-            if (!isHidden) {
-                for (let j = 0; j < atributos.length; j++) {
-                    const attr = atributos[j];
-                    if (attr.type === 'number' || attr.type === 'text') {
-                        const inputEl = document.getElementById(`${mat.id}_${attr.id}`);
-                        if (inputEl && inputEl.value.trim() === "") {
-                            alert(`Erro: O campo "${attr.label}" do material [ ${mat.label} ] está vazio. Por favor, preencha-o antes de finalizar.`);
-                            inputEl.focus();
-                            return;
-                        }
-                    }
-                }
+    const lote =
+        fieldLote.value.trim();
 
-                const textRefugo = document.getElementById(`${mat.id}_B`).textContent;
-                dadosMateriais[mat.id] = {
-                    label: mat.label,
-                    totalA3: document.getElementById(`${mat.id}_A3`).textContent,
-                    refugoB: textRefugo,
-                    pct: document.getElementById(`${mat.id}_calc_refugo`).textContent,
-                    statusClass: document.getElementById(`${mat.id}_calc_refugo`).className
-                };
+    const ordem =
+        fieldOrdem.value.trim();
 
-                const qtdTransf = parseFloat(document.getElementById(`${mat.id}_qtd_transf_prox`).value) || 0;
-                if (qtdTransf > 0) {
-                    const ordemDestino = document.getElementById(`${mat.id}_ordem_receber_transf`).value.trim();
-                    const loteMaterial = document.getElementById(`${mat.id}_lote_transf`).value.trim();
-                    
-                    transferenciasEnviadas.push({
-                        material: mat.label,
-                        quantidade: qtdTransf,
-                        ordemDestino: ordemDestino,
-                        loteMaterial: loteMaterial
-                    });
-                }
+    // VALIDA LOTE
+    if (!lote) {
 
-                const qtdRecebidaAnt = parseFloat(document.getElementById(`${mat.id}_A2`).value) || 0;
-                if (qtdRecebidaAnt > 0) {
-                    const ordemOrigem = document.getElementById(`${mat.id}_ordem_transf_ant`).value.trim();
-                    transferenciasRecebidas.push({
-                        material: mat.label,
-                        quantidade: qtdRecebidaAnt,
-                        ordemOrigem: ordemOrigem
-                    });
-                }
-            }
-        }
+        alert(
+            'Erro: O campo "Número do Lote Atual" é obrigatório.'
+        );
 
-        const agora = new Date();
-        const mesesNomes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        const mesAnoChave = `${mesesNomes[agora.getMonth()]} de ${agora.getFullYear()}`;
+        fieldLote.focus();
 
-        const novoRegistro = {
-            id: Date.now(),
-            lote: lote,
-            ordem: ordem,
-            dataHora: agora.toLocaleString('pt-BR'),
-            mesAno: mesAnoChave, 
-            materiais: dadosMateriais,
-            transferencias: transferenciasEnviadas, 
-            recebidos: transferenciasRecebidas 
+        return;
+    }
+
+    // VALIDA ORDEM
+    if (!ordem) {
+
+        alert(
+            'Erro: O campo "Número da Ordem Atual" é obrigatório.'
+        );
+
+        fieldOrdem.focus();
+
+        return;
+    }
+
+    const dadosMateriais = {};
+
+    // VALIDA TODOS OS CAMPOS
+    for (let i = 0; i < materiais.length; i++) {
+
+        const mat = materiais[i];
+
+        const isHidden =
+            document.getElementById(`toggle-${mat.id}`)
+            ? !document.getElementById(`toggle-${mat.id}`).checked
+            : false;
+
+        // IGNORA COLUNAS ESCONDIDAS
+        if (isHidden) continue;
+
+        dadosMateriais[mat.id] = {
+            label: mat.label
         };
 
-        const historicoExistente = JSON.parse(localStorage.getItem('historico_reconciliacao')) || [];
-        historicoExistente.unshift(novoRegistro);
-        localStorage.setItem('historico_reconciliacao', JSON.stringify(historicoExistente));
+        for (let j = 0; j < atributos.length; j++) {
 
-        alert('Lote finalizado e gravado com sucesso!');
-        
-        fieldLote.value = '';
-        fieldOrdem.value = '';
-        renderTable();
-        calculateValues();
-        fieldLote.focus();
+            const attr = atributos[j];
+
+            const el =
+                document.getElementById(
+                    `${mat.id}_${attr.id}`
+                );
+
+            // INPUTS
+            if (
+                attr.type === 'number' ||
+                attr.type === 'text'
+            ) {
+
+                // VALIDA CAMPO VAZIO
+                if (!el || el.value.trim() === '') {
+
+                    alert(
+                        `Erro: O campo "${attr.label}" do material [ ${mat.label} ] está vazio.`
+                    );
+
+                    if (el) {
+                        el.focus();
+                    }
+
+                    return;
+                }
+
+                dadosMateriais[mat.id][attr.id] =
+                    el.value;
+            }
+
+            // CALCULADOS
+            else {
+
+                dadosMateriais[mat.id][attr.id] =
+                    el
+                    ? el.textContent
+                    : '';
+            }
+        }
     }
 
-    function loadHistory() {
-        const container = document.getElementById('history-container');
-        const historico = JSON.parse(localStorage.getItem('historico_reconciliacao')) || [];
+    const agora = new Date();
 
-        if (historico.length === 0) {
-            container.innerHTML = '<div class="empty-history">Nenhum lote finalizado foi encontrado neste navegador.</div>';
-            return;
-        }
+    const meses = [
+        "Janeiro","Fevereiro","Março","Abril",
+        "Maio","Junho","Julho","Agosto",
+        "Setembro","Outubro","Novembro","Dezembro"
+    ];
 
-        const grupos = {};
-        historico.forEach(reg => {
-            if (!grupos[reg.mesAno]) {
-                grupos[reg.mesAno] = [];
-            }
-            grupos[reg.mesAno].push(reg);
+    const novoRegistro = {
+
+        id: Date.now(),
+
+        lote: lote,
+
+        ordem: ordem,
+
+        dataHora:
+            agora.toLocaleString('pt-BR'),
+
+        mesAno:
+            `${meses[agora.getMonth()]} de ${agora.getFullYear()}`,
+
+        materiais: dadosMateriais
+    };
+
+    const historico =
+        JSON.parse(
+            localStorage.getItem(
+                'historico_reconciliacao'
+            )
+        ) || [];
+
+    historico.unshift(novoRegistro);
+
+    localStorage.setItem(
+        'historico_reconciliacao',
+        JSON.stringify(historico)
+    );
+
+    alert('Lote finalizado com sucesso!');
+
+    // LIMPA CAMPOS
+    fieldLote.value = '';
+    fieldOrdem.value = '';
+
+    renderTable();
+
+    calculateValues();
+
+    fieldLote.focus();
+}
+
+function loadHistory() {
+
+    const container =
+        document.getElementById('history-container');
+
+    container.innerHTML = '';
+
+    const historico =
+        JSON.parse(
+            localStorage.getItem('historico_reconciliacao')
+        ) || [];
+
+    if (historico.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-history">
+                Nenhum lote encontrado.
+            </div>
+        `;
+
+        return;
+    }
+
+    historico.forEach(reg => {
+
+        const card =
+            document.createElement('div');
+
+        card.className = 'history-card';
+
+        let tabelaHTML = `
+
+            <div class="history-header">
+
+                <div>
+
+                    <strong style="
+                        color:var(--primary);
+                        font-size:15px;
+                    ">
+                        Lote: ${reg.lote}
+                    </strong>
+
+                    <span style="
+                        margin-left:12px;
+                        color:#475569;
+                    ">
+                        Ordem: ${reg.ordem}
+                    </span>
+
+                </div>
+
+                <div style="
+                    font-size:11px;
+                    color:#64748b;
+                ">
+                    ⏱ ${reg.dataHora}
+                </div>
+
+                <button
+                    class="btn-delete-item"
+                    onclick="deleteHistoryItem(${reg.id})"
+                >
+                    🗑 Excluir Registro
+                </button>
+
+            </div>
+
+            <div style="overflow-x:auto;">
+
+                <table style="
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top:10px;
+                    font-size:11px;
+                ">
+
+                    <thead>
+
+                        <tr style="background:#f1f5f9;">
+
+                            <th style="
+                                padding:8px;
+                                min-width:260px;
+                                text-align:left;
+                            ">
+                                Atributo
+                            </th>
+        `;
+
+        // CABEÇALHO DOS MATERIAIS
+        materiais.forEach(mat => {
+
+            tabelaHTML += `
+                <th style="
+                    padding:8px;
+                    min-width:130px;
+                    text-align:center;
+                ">
+                    ${mat.label}
+                </th>
+            `;
         });
 
-        container.innerHTML = '';
-
-        for (const mesAno in grupos) {
-            const secao = document.createElement('div');
-            secao.className = 'month-section';
-
-            const tituloMes = document.createElement('div');
-            tituloMes.className = 'month-title';
-            tituloMes.innerHTML = `<span>${mesAno}</span> <span style="font-size:12px; font-weight:normal;">(${grupos[mesAno].length} lote(s))</span>`;
-            secao.appendChild(tituloMes);
-
-            grupos[mesAno].forEach(reg => {
-                const card = document.createElement('div');
-                card.className = 'history-card';
-
-                let badgeEnviadosHTML = '';
-                let badgeRecebidosHTML = '';
-                let panelRecebidosHTML = '';
-                let panelEnviadosHTML = '';
-
-                if (reg.transferencias && reg.transferencias.length > 0) {
-                    badgeEnviadosHTML = `<span class="transfer-status-badge has-transfer" onclick="toggleTransferPanel(${reg.id}, 'envio')">📤 Enviou (${reg.transferencias.length})</span>`;
-                    
-                    let tabelaEnvioRows = '';
-                    reg.transferencias.forEach(t => {
-                        tabelaEnvioRows += `<tr><td><strong>${t.material}</strong></td><td>${t.ordemDestino}</td><td>${t.loteMaterial}</td><td><strong>${t.quantidade}</strong></td></tr>`;
-                    });
-
-                    panelEnviadosHTML = `
-                        <div id="panel-envio-${reg.id}" class="transfer-details-box" style="background-color: #fffbeb; border: 1px solid #fcd34d;">
-                            <strong style="color:#92400e;">📤 Transferências Enviadas (Para Próximo Lote):</strong>
-                            <table class="transfer-table">
-                                <thead style="background-color:#fef3c7; color:#92400e;">
-                                    <tr>
-                                        <th>Material</th>
-                                        <th>Ordem de Destino</th>
-                                        <th>Lote do Mat.</th>
-                                        <th>Quantidade Enviada</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${tabelaEnvioRows}</tbody>
-                            </table>
-                        </div>
-                    `;
-                } else {
-                    badgeEnviadosHTML = `<span class="transfer-status-badge no-transfer">⚪ Sem Envios</span>`;
-                }
-
-                if (reg.recebidos && reg.recebidos.length > 0) {
-                    badgeRecebidosHTML = `<span class="transfer-status-badge received-transfer" onclick="toggleTransferPanel(${reg.id}, 'recebido')">📥 Recebeu (${reg.recebidos.length})</span>`;
-                    
-                    let tabelaRecebidosRows = '';
-                    reg.recebidos.forEach(r => {
-                        tabelaRecebidosRows += `<tr><td><strong>${r.material}</strong></td><td>${r.ordemOrigem}</td><td><strong>${r.quantidade}</strong></td></tr>`;
-                    });
-
-                    panelRecebidosHTML = `
-                        <div id="panel-recebido-${reg.id}" class="transfer-details-box" style="background-color: #f0f9ff; border: 1px solid #bae6fd;">
-                            <strong style="color:#0369a1;">📥 Transferências Recebidas (Do Lote Anterior):</strong>
-                            <table class="transfer-table">
-                                <thead style="background-color:#e0f2fe; color:#0369a1;">
-                                    <tr>
-                                        <th>Material</th>
-                                        <th>Ordem de Origem</th>
-                                        <th>Quantidade Recebida</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${tabelaRecebidosRows}</tbody>
-                            </table>
-                        </div>
-                    `;
-                } else {
-                    badgeRecebidosHTML = `<span class="transfer-status-badge no-transfer">⚪ Sem Recebimentos</span>`;
-                }
-
-                let tabelaHtml = `
-                    <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:11px;">
-                        <thead>
-                            <tr style="background-color:#f8fafc;">
-                                <th style="padding:6px; color:var(--text-dark); background:#f1f5f9; font-size:11px; min-width:120px;">Material</th>
-                                <th style="padding:6px; color:var(--text-dark); background:#f1f5f9; font-size:11px; min-width:80px;">Total Rec. (A3)</th>
-                                <th style="padding:6px; color:var(--text-dark); background:#f1f5f9; font-size:11px; min-width:80px;">Refugo (B)</th>
-                                <th style="padding:6px; color:var(--text-dark); background:#f1f5f9; font-size:11px; min-width:80px;">% Refugo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                for (const matId in reg.materiais) {
-                    const m = reg.materiais[matId];
-                    const badgeClass = m.statusClass === 'status-ok' ? 'background-color:#d1fae5; color:#065f46; font-weight:bold; text-align:center;' : 'background-color:#fee2e2; color:#cb0404; font-weight:bold; text-align:center;';
-                    tabelaHtml += `
-                        <tr>
-                            <td style="padding:5px; background:white; font-weight:bold;">${m.label}</td>
-                            <td style="padding:5px; text-align:center; background:white;">${m.totalA3}</td>
-                            <td style="padding:5px; text-align:center; background:white;">${m.refugoB}</td>
-                            <td style="padding:5px; ${badgeClass}">${m.pct}</td>
+        tabelaHTML += `
                         </tr>
-                    `;
-                }
-                tabelaHtml += '</tbody></table>';
+                    </thead>
 
-                card.innerHTML = `
-                    <div class="history-header">
-                        <div>
-                            <span style="font-weight:bold; color:var(--primary); font-size:14px;">Lote: ${reg.lote}</span>
-                            <span style="margin-left:15px; color:#475569;">Ordem: ${reg.ordem}</span>
-                        </div>
-                        <div style="font-size:11px; color:#64748b;">
-                            <span>⏱ ${reg.dataHora}</span>
-                        </div>
-                        <div style="width:100%; margin-top:5px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-                            <div>
-                                ${badgeRecebidosHTML}
-                                ${badgeEnviadosHTML}
-                            </div>
-                            <button class="btn-delete-item" onclick="deleteHistoryItem(${reg.id})">🗑 Excluir Registro</button>
-                        </div>
-                    </div>
-                    ${panelRecebidosHTML}
-                    ${panelEnviadosHTML}
-                    <div style="overflow-x:auto;">
-                        ${tabelaHtml}
-                    </div>
+                    <tbody>
+        `;
+
+        // TODAS AS LINHAS DOS ATRIBUTOS
+        atributos.forEach(attr => {
+
+            tabelaHTML += `
+                <tr>
+
+                    <td style="
+                        padding:8px;
+                        font-weight:bold;
+                        background:#f8fafc;
+                    ">
+                        ${attr.label}
+                    </td>
+            `;
+
+            materiais.forEach(mat => {
+
+                const material =
+                    reg.materiais?.[mat.id];
+
+                let valor = '-';
+
+                if (material) {
+
+                    valor =
+                        material[attr.id] ?? '-';
+                }
+
+                // STATUS DO %
+                let estilo = `
+                    padding:8px;
+                    text-align:center;
+                    background:white;
                 `;
-                secao.appendChild(card);
+
+                if (attr.id === 'calc_refugo') {
+
+                    const pct =
+                        parseFloat(
+                            String(valor)
+                                .replace('%', '')
+                                .replace(',', '.')
+                        ) || 0;
+
+                    estilo += pct <= mat.tol
+                        ? `
+                            background:#d1fae5;
+                            color:#065f46;
+                            font-weight:bold;
+                        `
+                        : `
+                            background:#fee2e2;
+                            color:#991b1b;
+                            font-weight:bold;
+                        `;
+                }
+
+                tabelaHTML += `
+                    <td style="${estilo}">
+                        ${valor || '-'}
+                    </td>
+                `;
             });
-            container.appendChild(secao);
-        }
-    }
+
+            tabelaHTML += `
+                </tr>
+            `;
+        });
+
+        tabelaHTML += `
+                    </tbody>
+
+                </table>
+
+            </div>
+        `;
+
+        card.innerHTML = tabelaHTML;
+
+        container.appendChild(card);
+    });
+}
 
     function toggleTransferPanel(id, tipo) {
         const panel = document.getElementById(`panel-${tipo}-${id}`);
