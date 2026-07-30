@@ -11,36 +11,19 @@
     --accent-light: #ff1f1f;
 }
 
-/* Responsividade Aprimorada */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        padding: 15px;
-    }
-
+/* Responsividade */
+@media (max-width: 600px) {
     .meta-info-grid {
         grid-template-columns: 1fr;
     }
 
     .table-container {
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     .btn-finalize {
-        width: 100%;
-        margin-left: 0;
         padding: 15px;
         font-size: 16px;
-        text-align: center;
-    }
-
-    th, td {
-        padding: 6px;
-        font-size: 12px;
     }
 }
 
@@ -82,7 +65,6 @@ body {
 .tabs {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
 }
 
 .tab-btn {
@@ -146,7 +128,6 @@ h1 {
     border-radius: 6px;
     font-size: 14px;
     font-weight: 600;
-    width: 100%;
 }
 
 /* Controls */
@@ -203,12 +184,11 @@ h1 {
 }
 
 /* ========================= */
-/* TABELA CORRIGIDA          */
+/* TABELA CORRIGIDA */
 /* ========================= */
 
 .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: auto;
     max-height: 75vh;
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -218,17 +198,17 @@ h1 {
 table {
     border-collapse: separate;
     border-spacing: 0;
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     font-size: 13px;
-    /* Removido o width: max-content e white-space para evitar travamentos indesejados */
 }
 
 th,
 td {
     border: 1px solid var(--border-color);
     padding: 10px;
+    min-width: 160px;
     background: white;
-    /* Removido o min-width excessivo para permitir melhor fluidez */
 }
 
 /* Cabeçalho superior fixo */
@@ -247,9 +227,9 @@ thead th:first-child,
 tbody td:first-child {
     position: sticky;
     left: 0;
+    min-width: 280px;
     font-weight: bold;
     box-shadow: 4px 0 8px rgba(0,0,0,0.08);
-    min-width: 180px; /* Ajustado para não estourar no mobile */
 }
 
 /* Cabeçalho canto superior esquerdo */
@@ -279,7 +259,6 @@ tr:nth-child(even) td:not(:first-child) {
 input[type="number"],
 input[type="text"] {
     width: 100%;
-    min-width: 90px;
     padding: 6px 8px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -369,8 +348,6 @@ input[type="text"]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
 }
 
 .history-card {
@@ -457,6 +434,7 @@ input[type="text"]:focus {
 }
 
 /* Footer */
+/* FOOTER */
 footer {
     font-size: small;
     width: 100%;
@@ -467,6 +445,7 @@ footer {
     color: var(--text-dark);
 }
 
+/* LINK FOOTER */
 footer a {
     color: var(--primary);
     text-decoration: none;
